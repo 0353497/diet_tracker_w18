@@ -89,10 +89,12 @@ class _DietTrackerPageState extends State<DietTrackerPage> {
                         ),
                         Stack(
                           children: [
-                            CircularProgressIndicator(
-                              value:
-                                  currentDietDay.caloriesTotal /
-                                  currentPerson.calculatedKcal,
+                            Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    currentDietDay.caloriesTotal /
+                                    currentPerson.calculatedKcal,
+                              ),
                             ),
                             Center(
                               child: Column(
@@ -156,169 +158,375 @@ class _DietTrackerPageState extends State<DietTrackerPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                spacing: 12,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Water"),
-                  Row(
-                    children: List.generate(
-                      currentDietDay.glassedOfWater < 8
-                          ? 8
-                          : currentDietDay.glassedOfWater + 1,
-                      (i) {
-                        final isFilled = i < currentDietDay.glassedOfWater;
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  spacing: 12,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Water"),
+                    Row(
+                      children: List.generate(
+                        currentDietDay.glassedOfWater < 8
+                            ? 8
+                            : currentDietDay.glassedOfWater + 1,
+                        (i) {
+                          final isFilled = i < currentDietDay.glassedOfWater;
 
-                        return InkWell(
-                          key: ValueKey('water-glass-$i'),
-                          onTap: () {
-                            setState(() {
-                              _setWaterGlasses(isFilled ? i : i + 1);
-                            });
-                          },
-                          child: Image.asset(
-                            isFilled
-                                ? "assets/Icons/Water full.png"
-                                : "assets/Icons/Water empty.png",
-                            height: 32,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    height: 60,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Color(0xffe3f0e1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("Breakfast"), Text("0kcal")],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Not entered yet",
-                              style: TextStyle(color: Colors.grey),
+                          return InkWell(
+                            key: ValueKey('water-glass-$i'),
+                            onTap: () {
+                              setState(() {
+                                _setWaterGlasses(isFilled ? i : i + 1);
+                              });
+                            },
+                            child: Image.asset(
+                              isFilled
+                                  ? "assets/Icons/Water full.png"
+                                  : "assets/Icons/Water empty.png",
+                              height: 32,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 60,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Color(0xffe3f0e1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("Lunch"), Text("0kcal")],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Not entered yet",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 60,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Color(0xffe3f0e1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("Dinner"), Text("0kcal")],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Not entered yet",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 60,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Color(0xffe3f0e1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("Exercise"), Text("0kcal")],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Not entered yet",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Row(
-                    spacing: 12,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              Color(0xff00a221),
-                            ),
-                            foregroundColor: WidgetStatePropertyAll(
-                              Colors.white,
-                            ),
-                          ),
-                          child: Text("Track Exercise"),
-                        ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    Container(
+                      height: 60,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xffe3f0e1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text("Breakfast"), Text("0kcal")],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Not entered yet",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 60,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xffe3f0e1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text("Lunch"), Text("0kcal")],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Not entered yet",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 60,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xffe3f0e1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text("Dinner"), Text("0kcal")],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Not entered yet",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 60,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xffe3f0e1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text("Exercise"), Text("0kcal")],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Not entered yet",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    Row(
+                      spacing: 12,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              Get.bottomSheet(
+                                TrackMealSheet(
+                                  onTrack: (meal) {
+                                    setState(() {
+                                      currentDietDay.meals.add(meal);
+                                    });
+                                  },
+                                ),
+                              );
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Color(0xff00a221),
+                              ),
+                              foregroundColor: WidgetStatePropertyAll(
+                                Colors.white,
+                              ),
+                            ),
+                            child: Text("Track Meal"),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              Get.bottomSheet(TrackExcerciseSheet());
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Color(0xff00a221),
+                              ),
+                              foregroundColor: WidgetStatePropertyAll(
+                                Colors.white,
+                              ),
+                            ),
+                            child: Text("Track Exercise"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         );
       }),
+    );
+  }
+}
+
+class TrackExcerciseSheet extends StatefulWidget {
+  const TrackExcerciseSheet({super.key});
+
+  @override
+  State<TrackExcerciseSheet> createState() => _TrackExcerciseSheetState();
+}
+
+class _TrackExcerciseSheetState extends State<TrackExcerciseSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height * .33,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          child: Column(
+            children: [
+              Text(
+                "Track Exercise",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              TextFormField(decoration: InputDecoration(labelText: "Name")),
+              TextFormField(decoration: InputDecoration(labelText: "Calories")),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: Get.width * .5,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Color(0xff00a221),
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      ),
+                      child: Text("Track"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TrackMealSheet extends StatefulWidget {
+  final void Function(Meal) onTrack;
+  const TrackMealSheet({super.key, required this.onTrack});
+
+  @override
+  State<TrackMealSheet> createState() => _TrackMealSheetState();
+}
+
+class _TrackMealSheetState extends State<TrackMealSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameCtrl = TextEditingController();
+  final TextEditingController _kcalCtrl = TextEditingController();
+  String _mealType = 'Breakfast';
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _kcalCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height * .33,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Text(
+                "Track Meal",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                width: double.maxFinite,
+                height: 60,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xff00a221), width: 4),
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () => setState(() => _mealType = 'Breakfast'),
+                      child: Text("Breakfast"),
+                    ),
+                    TextButton(
+                      onPressed: () => setState(() => _mealType = 'Lunch'),
+                      child: Text("Lunch"),
+                    ),
+                    TextButton(
+                      onPressed: () => setState(() => _mealType = 'Dinner'),
+                      child: Text("Dinner"),
+                    ),
+                  ],
+                ),
+              ),
+              TextFormField(
+                controller: _nameCtrl,
+                decoration: InputDecoration(labelText: "Name"),
+                validator: (v) =>
+                    (v == null || v.isEmpty) ? 'Enter name' : null,
+              ),
+              TextFormField(
+                controller: _kcalCtrl,
+                decoration: InputDecoration(labelText: "Calories"),
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Enter calories';
+                  if (int.tryParse(v) == null) return 'Enter a number';
+                  return null;
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: Get.width * .5,
+                    child: TextButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          final meal = Meal(
+                            time: DateTime.now(),
+                            kcal: int.parse(_kcalCtrl.text),
+                            name:
+                                '${_mealType.isNotEmpty ? '$_mealType: ' : ''}${_nameCtrl.text}',
+                          );
+                          widget.onTrack(meal);
+                          Get.back();
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Color(0xff00a221),
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      ),
+                      child: Text("Track"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
