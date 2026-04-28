@@ -24,6 +24,19 @@ class _OnBoardingState extends State<OnBoarding> {
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
 
+  bool get isFormValid {
+    final height = int.tryParse(heightController.text);
+    final weight = double.tryParse(weightController.text);
+
+    return selectedGoal != null &&
+        selectedSex != null &&
+        selectedDOB != null &&
+        height != null &&
+        height > 0 &&
+        weight != null &&
+        weight > 0;
+  }
+
   Future<void> _pickDob() async {
     final pickedDate = await showDatePicker(
       context: context,
@@ -73,6 +86,14 @@ class _OnBoardingState extends State<OnBoarding> {
   final PersonProvider personProvider = Get.find<PersonProvider>();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    dobController.dispose();
+    heightController.dispose();
+    weightController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -292,6 +313,7 @@ class _OnBoardingState extends State<OnBoarding> {
                       validator: (value) {
                         if (value == null) return "value can not be empty";
                         if (value.isEmpty) return "value can not be empty";
+
                         return null;
                       },
                       decoration: InputDecoration(
@@ -321,6 +343,13 @@ class _OnBoardingState extends State<OnBoarding> {
                       validator: (value) {
                         if (value == null) return "value can not be empty";
                         if (value.isEmpty) return "value can not be empty";
+                        if (int.tryParse(value) == null) {
+                          return "value needs to be an int";
+                        }
+                        if (int.parse(value).isNegative) {
+                          return "value needs to be positive";
+                        }
+
                         return null;
                       },
                       decoration: InputDecoration(
@@ -353,6 +382,12 @@ class _OnBoardingState extends State<OnBoarding> {
                       validator: (value) {
                         if (value == null) return "value can not be empty";
                         if (value.isEmpty) return "value can not be empty";
+                        if (int.tryParse(value) == null) {
+                          return "value needs to be an int";
+                        }
+                        if (int.parse(value).isNegative) {
+                          return "value needs to be positive";
+                        }
                         return null;
                       },
                       decoration: InputDecoration(
@@ -398,15 +433,20 @@ class _OnBoardingState extends State<OnBoarding> {
                     SizedBox(
                       width: Get.width * .66,
                       child: TextButton(
-                        onPressed: () {
-                          if (formKey.currentState?.validate() ?? false) {
-                            personProvider.person.value = calculatedPerson!;
-                            Get.to(() => DietTrackerPage());
-                          }
-                        },
+                        onPressed: !isFormValid
+                            ? null
+                            : () {
+                                if (formKey.currentState?.validate() ?? false) {
+                                  personProvider.person.value =
+                                      calculatedPerson!;
+                                  Get.to(() => DietTrackerPage());
+                                }
+                              },
                         style: ButtonStyle(
                           backgroundColor: WidgetStatePropertyAll(
-                            Color(0xff00a221),
+                            !isFormValid
+                                ? Color(0xff00a221).withAlpha(130)
+                                : Color(0xff00a221),
                           ),
                           foregroundColor: WidgetStatePropertyAll(Colors.white),
                         ),
