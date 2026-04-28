@@ -89,22 +89,41 @@ class _DietTrackerPageState extends State<DietTrackerPage> {
                         ),
                         Stack(
                           children: [
-                            Center(
-                              child: CircularProgressIndicator(
-                                value:
-                                    currentDietDay.caloriesTotal /
-                                    currentPerson.calculatedKcal,
-                              ),
-                            ),
-                            Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "${personProvider.person.value!.calculatedKcal}",
-                                    style: TextStyle(fontSize: 32),
+                            if (currentPerson.calculatedKcal -
+                                    currentDietDay.caloriesTotal >
+                                0)
+                              Positioned.fill(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(
+                                    Color(0xff00a221),
                                   ),
-                                  Text("KCAL LEFT"),
-                                ],
+                                  value:
+                                      currentDietDay.caloriesTotal /
+                                      currentPerson.calculatedKcal,
+                                ),
+                              ),
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  spacing: 12,
+                                  children: [
+                                    Text(
+                                      "${personProvider.person.value!.calculatedKcal}",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    Text(
+                                      currentPerson.calculatedKcal -
+                                                  currentDietDay.caloriesTotal >
+                                              0
+                                          ? "KCAL LEFT"
+                                          : "KCAL OVER.",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
