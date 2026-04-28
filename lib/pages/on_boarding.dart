@@ -1,8 +1,10 @@
 import 'package:diet_tracker/models/person.dart';
+import 'package:diet_tracker/pages/diet_tracker_page.dart';
 import 'package:diet_tracker/providers/person_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
+import 'package:intl/intl.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -12,6 +14,7 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding> {
+  final DateFormat _dobFormat = DateFormat('dd/MM/yyyy');
   Goal? selectedGoal;
   Sex? selectedSex;
   DateTime? selectedDOB;
@@ -20,11 +23,56 @@ class _OnBoardingState extends State<OnBoarding> {
   TextEditingController dobController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
-  //• If sex is female: 9.563 ∗ current weight + 1.850 ∗ height − 4.676 ∗ age + 655.1 • If sex is male: 13.752 ∗ current weight + 5.003 ∗ height − 6.755 ∗ age + 66.5
-  int get calculatedKcal => selectedSex == Sex.male ? { return 0; } : {return 0;}
+
+  Future<void> _pickDob() async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDOB ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate == null) {
+      return;
+    }
+
+    setState(() {
+      selectedDOB = pickedDate;
+      dobController.text = _dobFormat.format(pickedDate);
+    });
+  }
+
+  Person? get calculatedPerson {
+    final goal = selectedGoal;
+    final sex = selectedSex;
+    final dob = selectedDOB;
+    final height = selectedHeight;
+    final weight = selectedWeight;
+
+    if (goal == null ||
+        sex == null ||
+        dob == null ||
+        height == null ||
+        weight == null) {
+      return null;
+    }
+
+    return Person(
+      goal: goal,
+      sex: sex,
+      dob: dob,
+      heightInCm: height,
+      weight: weight,
+    );
+  }
+
+  int get calculatedKcal {
+    return calculatedPerson?.calculatedKcal ?? 0;
+  }
+
   final PersonProvider personProvider = Get.find<PersonProvider>();
 
-  final GlobalKey formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -236,16 +284,18 @@ class _OnBoardingState extends State<OnBoarding> {
                   children: [
                     Text("Date of Birth"),
                     TextFormField(
-                      onChanged: (_) {
-                        setState(() {});
-                      },
                       controller: dobController,
+                      readOnly: true,
+                      showCursor: false,
+                      keyboardType: TextInputType.none,
+                      onTap: _pickDob,
                       validator: (value) {
                         if (value == null) return "value can not be empty";
                         if (value.isEmpty) return "value can not be empty";
                         return null;
                       },
                       decoration: InputDecoration(
+                        hintText: "dd/MM/yyyy",
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Image.asset(
@@ -263,7 +313,9 @@ class _OnBoardingState extends State<OnBoarding> {
                     Text("Height"),
                     TextFormField(
                       onChanged: (_) {
-                        setState(() {});
+                        setState(() {
+                          selectedHeight = int.tryParse(heightController.text);
+                        });
                       },
                       controller: heightController,
                       validator: (value) {
@@ -291,7 +343,11 @@ class _OnBoardingState extends State<OnBoarding> {
                     Text("Weight"),
                     TextFormField(
                       onChanged: (_) {
-                        setState(() {});
+                        setState(() {
+                          selectedWeight = double.tryParse(
+                            weightController.text,
+                          );
+                        });
                       },
                       controller: weightController,
                       validator: (value) {
@@ -342,7 +398,12 @@ class _OnBoardingState extends State<OnBoarding> {
                     SizedBox(
                       width: Get.width * .66,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (formKey.currentState?.validate() ?? false) {
+                            personProvider.person.value = calculatedPerson!;
+                            Get.to(() => DietTrackerPage());
+                          }
+                        },
                         style: ButtonStyle(
                           backgroundColor: WidgetStatePropertyAll(
                             Color(0xff00a221),
