@@ -327,7 +327,15 @@ class _DietTrackerPageState extends State<DietTrackerPage> {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              Get.bottomSheet(TrackExcerciseSheet());
+                              Get.bottomSheet(
+                                TrackExcerciseSheet(
+                                  onTrack: (exc) {
+                                    setState(() {
+                                      currentDietDay.excersices.add(exc);
+                                    });
+                                  },
+                                ),
+                              );
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -354,13 +362,25 @@ class _DietTrackerPageState extends State<DietTrackerPage> {
 }
 
 class TrackExcerciseSheet extends StatefulWidget {
-  const TrackExcerciseSheet({super.key});
+  final void Function(Excersice) onTrack;
+  const TrackExcerciseSheet({super.key, required this.onTrack});
 
   @override
   State<TrackExcerciseSheet> createState() => _TrackExcerciseSheetState();
 }
 
 class _TrackExcerciseSheetState extends State<TrackExcerciseSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameCtrl = TextEditingController();
+  final TextEditingController _kcalCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _kcalCtrl.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -375,14 +395,29 @@ class _TrackExcerciseSheetState extends State<TrackExcerciseSheet> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               Text(
                 "Track Exercise",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-              TextFormField(decoration: InputDecoration(labelText: "Name")),
-              TextFormField(decoration: InputDecoration(labelText: "Calories")),
+              TextFormField(
+                controller: _nameCtrl,
+                decoration: InputDecoration(labelText: "Name"),
+                validator: (v) =>
+                    (v == null || v.isEmpty) ? 'Enter name' : null,
+              ),
+              TextFormField(
+                controller: _kcalCtrl,
+                decoration: InputDecoration(labelText: "Calories"),
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Enter calories';
+                  if (int.tryParse(v) == null) return 'Enter a number';
+                  return null;
+                },
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -390,7 +425,15 @@ class _TrackExcerciseSheetState extends State<TrackExcerciseSheet> {
                     width: Get.width * .5,
                     child: TextButton(
                       onPressed: () {
-                        Get.back();
+                        if (_formKey.currentState?.validate() ?? false) {
+                          final exc = Excersice(
+                            time: DateTime.now(),
+                            kcal: int.parse(_kcalCtrl.text),
+                            name: _nameCtrl.text,
+                          );
+                          widget.onTrack(exc);
+                          Get.back();
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
@@ -491,6 +534,7 @@ class _TrackMealSheetState extends State<TrackMealSheet> {
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Enter calories';
                   if (int.tryParse(v) == null) return 'Enter a number';
+                  if (int.parse(v).isNegative) return "Enter a positive number";
                   return null;
                 },
               ),
