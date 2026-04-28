@@ -25,7 +25,7 @@ flutter:
   - assets/Icons/
   - assets/Arial/
   fonts:
-    - family: Schyler
+    - family: Arial
       fonts:
         - asset: assets/Arial/Arial.ttf
         - asset: assets/Arial/Arial Bold.ttf
